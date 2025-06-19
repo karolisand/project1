@@ -1,0 +1,15 @@
+[project]
+name = "project1"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.13.4",
+    "langchain>=0.3.25",
+    "langchain-community>=0.3.25",
+    "langchain-openai>=0.3.24",
+    "langchain-text-splitters>=0.3.8",
+    "python-dotenv>=1.1.0",
+    "streamlit>=1.46.0",
+]
