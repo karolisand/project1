@@ -43,7 +43,7 @@ vectorstore = InMemoryVectorStore(embeddings)
 
 _ = vectorstore.add_documents(documents=splits)
 
-retriever = vectorstore.as_retriever()
+retriever = vectorstore.as_retriever(search_kwargs={"k": 3})
 prompt = hub.pull("rlm/rag-prompt")
 
 def format_docs(docs):
@@ -55,6 +55,8 @@ st.title("Streamlit LangChain Demo")
 def generate_response(input_text):
     llm = ChatOpenAI(base_url=endpoint, temperature=0.7, api_key=token, model=model)
 
+    fetched_docs = vectorstore.search(input_text, search_type="similarity", k=3)
+
     rag_chain = (
         {"context": retriever | format_docs, "question": RunnablePassthrough()}
         | prompt
@@ -64,6 +66,11 @@ def generate_response(input_text):
     
     
     st.info(rag_chain.invoke(input_text))
+
+    st.subheader("📚 Sources")
+    for i, doc in enumerate(fetched_docs, 1):
+        with st.expander(f"Source {i}"):
+            st.write(f"**Content:** {doc.page_content}")
 
 with st.form("my_form"):
     text = st.text_area(
